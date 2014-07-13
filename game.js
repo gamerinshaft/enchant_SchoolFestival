@@ -11,7 +11,11 @@
   core = {};
 
   window.onload = function() {
+    var play_img;
     core = new Core(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+    play_img = [];
+    play_img.push('');
+    core.preload(gazou);
     core.onload = function() {};
     return core.start;
   };
