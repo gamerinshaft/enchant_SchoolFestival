@@ -14,10 +14,17 @@
     var play_img;
     core = new Core(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     play_img = [];
-    play_img.push('');
-    core.preload(gazou);
-    core.onload = function() {};
-    return core.start;
+    play_img.push('./play.png');
+    core.preload(play_img);
+    core.onload = function() {
+      var titleBack, titleScene;
+      titleScene = new Scene();
+      core.pushScene(titleScene);
+      titleBack = new Sprite(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+      titleBack.image = core.assets['./play.png'];
+      return titleScene.addChild(titleBack);
+    };
+    return core.start();
   };
 
 }).call(this);

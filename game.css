@@ -1,0 +1,12 @@
+body{
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+}
+#enchant-stage{
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 0px;
+  position: relative !important;
+}
