@@ -5,5 +5,6 @@ enchant()
 
 core = {}
 window.onload = ->
+  core = new Core DISPLAY_WIDTH, DISPLAY_HEIGHT
   core.onload = ->
   core.start

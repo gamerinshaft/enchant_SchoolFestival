@@ -11,6 +11,7 @@
   core = {};
 
   window.onload = function() {
+    core = new Core(DISPLAY_WIDTH, DISPLAY_HEIGHT);
     core.onload = function() {};
     return core.start;
   };
