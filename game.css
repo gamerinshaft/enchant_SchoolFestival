@@ -1,15 +1,14 @@
 body{
   margin: 0;
+  padding: 0;
+  position: relative;
   width: 100%;
   height: 100%;
   background-color: black;
 }
-#enchant-stage{
-  margin-right: auto;
-  margin-left: auto;
-  margin-top: 0px;
-  position: relative !important;
-}
-.title_click{
 
+#enchant-stage{
+  width: 100%;
+  height: 100%;
+  position: fixed;
 }
