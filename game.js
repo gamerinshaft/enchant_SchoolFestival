@@ -2,9 +2,9 @@
 (function() {
   var DISPLAY_HEIGHT, DISPLAY_WIDTH, core;
 
-  DISPLAY_WIDTH = 1200;
+  DISPLAY_WIDTH = 930;
 
-  DISPLAY_HEIGHT = 720;
+  DISPLAY_HEIGHT = 620;
 
   enchant();
 
