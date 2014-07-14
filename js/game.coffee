@@ -101,6 +101,8 @@ class MenuSceneKayo extends Sprite
 
 class KayoGameScene extends Scene
   constructor: ->
+    core.keybind(16, "a");
+
     super()
     @bg = new Sprite(DISPLAY_WIDTH, DISPLAY_HEIGHT)
     @bg.backgroundColor = 'wheat'
@@ -137,17 +139,24 @@ class KayoGameSceneChara extends Sprite
   constructor: ->
     super(62, 95)
     @image = core.assets['./img/kayo_chara.png']
-    @moveTo(DISPLAY_WIDTH / 2 - @width / 2 , DISPLAY_HEIGHT - @height * 1.3)
-    @scaleX = 1.3
-    @scaleY = 1.3
+    @moveTo(DISPLAY_WIDTH / 2 - @width / 2 , DISPLAY_HEIGHT - @height * 1.1)
+    @scaleX = 1.1
+    @scaleY = 1.1
 
   onenterframe: ->
     if core.input.left
-      @scaleX = 1.3
-      @x -= 15 if @x > 0
+      @scaleX = 1.1
+      if core.input.a
+        @x -= 5 if @x > 0
+      else
+        @x -= 15 if @x > 0
+
     if core.input.right
-      @scaleX = -1.3
-      @x += 15 if @x < DISPLAY_WIDTH - @width
+      @scaleX = -1.1
+      if core.input.a
+        @x += 5 if @x < DISPLAY_WIDTH - @width
+      else
+        @x += 15 if @x < DISPLAY_WIDTH - @width
 
 
 class KayoGameSceneBackAction extends Sprite

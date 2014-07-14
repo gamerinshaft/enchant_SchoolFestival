@@ -155,6 +155,7 @@
     __extends(KayoGameScene, _super);
 
     function KayoGameScene() {
+      core.keybind(16, "a");
       KayoGameScene.__super__.constructor.call(this);
       this.bg = new Sprite(DISPLAY_WIDTH, DISPLAY_HEIGHT);
       this.bg.backgroundColor = 'wheat';
@@ -205,22 +206,34 @@
     function KayoGameSceneChara() {
       KayoGameSceneChara.__super__.constructor.call(this, 62, 95);
       this.image = core.assets['./img/kayo_chara.png'];
-      this.moveTo(DISPLAY_WIDTH / 2 - this.width / 2, DISPLAY_HEIGHT - this.height * 1.3);
-      this.scaleX = 1.3;
-      this.scaleY = 1.3;
+      this.moveTo(DISPLAY_WIDTH / 2 - this.width / 2, DISPLAY_HEIGHT - this.height * 1.1);
+      this.scaleX = 1.1;
+      this.scaleY = 1.1;
     }
 
     KayoGameSceneChara.prototype.onenterframe = function() {
       if (core.input.left) {
-        this.scaleX = 1.3;
-        if (this.x > 0) {
-          this.x -= 15;
+        this.scaleX = 1.1;
+        if (core.input.a) {
+          if (this.x > 0) {
+            this.x -= 5;
+          }
+        } else {
+          if (this.x > 0) {
+            this.x -= 15;
+          }
         }
       }
       if (core.input.right) {
-        this.scaleX = -1.3;
-        if (this.x < DISPLAY_WIDTH - this.width) {
-          return this.x += 15;
+        this.scaleX = -1.1;
+        if (core.input.a) {
+          if (this.x < DISPLAY_WIDTH - this.width) {
+            return this.x += 5;
+          }
+        } else {
+          if (this.x < DISPLAY_WIDTH - this.width) {
+            return this.x += 15;
+          }
         }
       }
     };
