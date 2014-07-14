@@ -93,10 +93,23 @@ class MenuSceneKayo extends Sprite
     @moveTo(395,120)
   ontouchend: ->
     core.popScene()
+    core.kayogamehowtoscene = new KayoGameHowToScene()
+    core.replaceScene(core.kayogamehowtoscene)
+
+
+#---------------------かよゲーム説明シーン-----------------------
+class KayoGameHowToScene extends Scene
+  constructor: ->
+    super()
+    @bg = new Sprite(DISPLAY_WIDTH, DISPLAY_HEIGHT)
+    @bg.image = core.assets['./img/kayo_hawto.jpg']
+
+    @addChild @bg
+
+  ontouchend: ->
+    core.popScene()
     core.kayogamescene = new KayoGameScene()
     core.replaceScene(core.kayogamescene)
-
-
 #---------------------かよゲームシーン-----------------------
 
 class KayoGameScene extends Scene
@@ -314,6 +327,7 @@ window.onload = ->
   assets.push('./img/gohan_bg.png')
   assets.push('./img/kayo_rin.png')
   assets.push('./img/kayogameover.jpg')
+  assets.push('./img/kayo_hawto.jpg')
   core.preload assets
 
 
@@ -321,5 +335,5 @@ window.onload = ->
     @titleScene = new TitleScene()
     @kayoGameScene = new KayoGameScene()
     @pushScene @titleScene
-  core.debug()
+  core.start()
 
