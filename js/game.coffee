@@ -36,7 +36,7 @@ class TitleName extends Sprite
         @titleNameState = 'up'
 
 
-  ontouchend: ->
+  ontouchstart: ->
     core.menuScene = new MenuScene()
     core.pushScene(core.menuScene)
 
@@ -118,6 +118,15 @@ class KayoGameSceneChara extends Sprite
     super(146, 191)
     @image = core.assets['./img/kayo_chara.png']
     @moveTo(10,DISPLAY_HEIGHT - @height)
+
+  onenterframe: ->
+    if core.input.left
+      @scaleX = 1
+      @x -= 8 if @x > 0
+    if core.input.right
+      @scaleX = -1
+      @x += 8 if @x < DISPLAY_WIDTH - @width
+
 
 class KayoGameSceneBackAction extends Sprite
   constructor: ->

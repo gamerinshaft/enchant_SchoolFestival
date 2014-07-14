@@ -55,7 +55,7 @@
       }
     };
 
-    TitleName.prototype.ontouchend = function() {
+    TitleName.prototype.ontouchstart = function() {
       core.menuScene = new MenuScene();
       return core.pushScene(core.menuScene);
     };
@@ -177,6 +177,21 @@
       this.image = core.assets['./img/kayo_chara.png'];
       this.moveTo(10, DISPLAY_HEIGHT - this.height);
     }
+
+    KayoGameSceneChara.prototype.onenterframe = function() {
+      if (core.input.left) {
+        this.scaleX = 1;
+        if (this.x > 0) {
+          this.x -= 8;
+        }
+      }
+      if (core.input.right) {
+        this.scaleX = -1;
+        if (this.x < DISPLAY_WIDTH - this.width) {
+          return this.x += 8;
+        }
+      }
+    };
 
     return KayoGameSceneChara;
 
