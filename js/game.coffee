@@ -101,7 +101,8 @@ class MenuSceneKayo extends Sprite
 
 class KayoGameScene extends Scene
   constructor: ->
-    core.keybind(16, "a");
+    core.keybind(16, "a")
+    core.keybind(70, "b")
 
     super()
     @bg = new Sprite(DISPLAY_WIDTH, DISPLAY_HEIGHT)
@@ -110,9 +111,13 @@ class KayoGameScene extends Scene
     @bgaction = new KayoGameSceneBackAction()
     @chara = new KayoGameSceneChara()
 
+    @numberOfBomb = 3
+    @bomblabel = new KayoGameSceneBomb(@numberOfBomb)
+    @isOnceDoAmongPressKey = 0
     @staffs = []
     @staffCycle = 40
     @addChild @bg
+    @addChild @bomblabel
     @addChild @bgaction
     @addChild @chara
 
@@ -123,11 +128,23 @@ class KayoGameScene extends Scene
       @rin = new KayoGameSceneRin()
       @addChild @rin
       @staffs.push @rin
-
     i = @staffs.length
+    if core.input.b && @numberOfBomb > 0
+      if @isOnceDoAmongPressKey == 0
+        @isOnceDoAmongPressKey = 1
+        while i
+          @staffs.splice i, 1
+          @removeChild @staffs[--i]
+        @removeChild @bomblabel
+        @bomblabel = new KayoGameSceneBomb(--@numberOfBomb)
+        @addChild @bomblabel
+    else
+      @isOnceDoAmongPressKey = 0
+
     while i
       @staff = @staffs[--i]
       if @staff.intersect(@chara)
+        @staffs.splice i, 1
         @removeChild @staff
         core.popScene()
         core.gameover = new KayoGameOverScene()
@@ -157,6 +174,14 @@ class KayoGameSceneChara extends Sprite
         @x += 5 if @x < DISPLAY_WIDTH - @width
       else
         @x += 15 if @x < DISPLAY_WIDTH - @width
+
+class KayoGameSceneBomb extends Label
+  constructor: (num)->
+    super()
+    @text = '残りボム数:' + num
+    @color = 'darkred'
+    @moveTo(10,10)
+    @font = '28px serif'
 
 
 class KayoGameSceneBackAction extends Sprite
