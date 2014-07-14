@@ -1,16 +1,22 @@
 body{
   margin: 0;
   padding: 0;
-  position: relative;
+/*  position: relative;
   width: 100%;
-  height: 100%;
+  height: 100%;*/
   background-color: black;
 }
 
+#game{
+  width: 930px;  /* enchant.jsのGameオブジェクトの作成時に設定したゲーム画面サイズ */
+  margin:0 auto 0 auto;  /* HTMLで設定したdiv#gameをセンタリング */
+  border: 8px double #fff;  /* ゲーム画面を囲う線（任意） */
+}
+
 #enchant-stage{
-  right: 0;
+/*  right: 0;
   top: 0;
   left: 0;
   margin: auto;
-  height: 100%;
+  height: 100%;*/
 }

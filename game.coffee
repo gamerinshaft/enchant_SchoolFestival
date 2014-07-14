@@ -55,14 +55,63 @@ class TitleScene extends Scene
     @addChild @titlename
     @addChild @titlelabel
 
+  ontouchstart: ->
+    core.menuScene = new MenuScene()
+    core.pushScene(core.menuScene)
+
+class MenuSceneLabel extends Label
+  constructor: ->
+    super()
+    @text = '遊ぶゲームを選んでね！'
+    @width = core.width
+    @font = '38px serif'
+    @y = 50
+    @x = 390
+    @color = 'rgb(251, 0, 126)'
+
+class MenuScene extends Scene
+  constructor: ->
+    super()
+    @bg = new Sprite(DISPLAY_WIDTH, DISPLAY_HEIGHT)
+    @bg.image = core.assets['./menu.png']
+    @menuscenelabel = new MenuSceneLabel()
+    @menuscenekayo = new MenuSceneKayo()
+
+    @addChild @bg
+    @addChild @menuscenelabel
+    @addChild @menuscenekayo
+
+class MenuSceneKayo extends Sprite
+  constructor: ->
+    super(404, 178)
+    @image = core.assets['./kayo_menu2.png']
+    @moveTo(395,120)
+  ontouchstart: ->
+    console.log('hoge')
+    core.popScene()
+    core.kayogamescene = new KayoGameScene()
+    core.replaceScene(core.kayogamescene)
+
+
+class KayoGameScene extends Scene
+  constructor: ->
+    super()
+    @bg = new Sprite(DISPLAY_WIDTH, DISPLAY_HEIGHT)
+    @bg.image = core.assets['./bento1.jpg']
+
+    @addChild @bg
+
 window.onload = ->
   core = new Core DISPLAY_WIDTH, DISPLAY_HEIGHT
   assets = []
   assets.push('./title_name.png')
   assets.push('./title_back1.jpg')
+  assets.push('./menu.png')
+  assets.push('./kayo_menu2.png')
+  assets.push('./bento1.jpg')
   core.preload assets
 
   core.onload = ->
     @titleScene = new TitleScene()
-    @.pushScene @titleScene
+    @pushScene @titleScene
   core.start()
