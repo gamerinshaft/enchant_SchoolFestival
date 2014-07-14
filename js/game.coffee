@@ -93,7 +93,6 @@ class MenuSceneKayo extends Sprite
     @image = core.assets['./img/kayo_menu2.png']
     @moveTo(395,120)
   ontouchend: ->
-    console.log('hoge')
     core.popScene()
     core.kayogamescene = new KayoGameScene()
     core.replaceScene(core.kayogamescene)
@@ -105,18 +104,27 @@ class KayoGameScene extends Scene
   constructor: ->
     super()
     @bg = new Sprite(DISPLAY_WIDTH, DISPLAY_HEIGHT)
-    @bg.image = core.assets['./img/bento1.jpg']
+    @bg.backgroundColor = 'wheat'
 
     @chara = new KayoGameSceneChara()
+    @bgaction = new KayoGameSceneBackAction()
 
     @addChild @bg
+    @addChild @bgaction
     @addChild @chara
 
 class KayoGameSceneChara extends Sprite
   constructor: ->
-    super(147, 230)
-    @image = core.assets['./img/chara.png']
+    super(146, 191)
+    @image = core.assets['./img/kayo_chara.png']
     @moveTo(10,DISPLAY_HEIGHT - @height)
+
+class KayoGameSceneBackAction extends Sprite
+  constructor: ->
+    super(205,165)
+    @image = core.assets['./img/gohan_bg.png']
+    @x = DISPLAY_WIDTH/2 - @width/2
+    @y = DISPLAY_HEIGHT/2 - @height/2
 
 #-------------------------メイン---------------------------
 window.onload = ->
@@ -127,7 +135,8 @@ window.onload = ->
   assets.push('./img/menu.png')
   assets.push('./img/kayo_menu2.png')
   assets.push('./img/bento1.jpg')
-  assets.push('./img/chara.png')
+  assets.push('./img/kayo_chara.png')
+  assets.push('./img/gohan_bg.png')
   core.preload assets
 
   core.onload = ->
