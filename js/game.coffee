@@ -115,7 +115,7 @@ class KayoGameScene extends Scene
     @addChild @chara
 
   onenterframe: ->
-    if core.frame % 50 == 0 && @staffCycle > 10
+    if core.frame % 20 == 0 && @staffCycle > 10
       @staffCycle -= 1
     if core.frame % @staffCycle == 0
       @rin = new KayoGameSceneRin()
@@ -135,18 +135,19 @@ class KayoGameScene extends Scene
 
 class KayoGameSceneChara extends Sprite
   constructor: ->
-    super(73, 95)
+    super(62, 95)
     @image = core.assets['./img/kayo_chara.png']
-    @moveTo(DISPLAY_WIDTH / 2 - @width / 2 , DISPLAY_HEIGHT - @height)
-
+    @moveTo(DISPLAY_WIDTH / 2 - @width / 2 , DISPLAY_HEIGHT - @height * 1.3)
+    @scaleX = 1.3
+    @scaleY = 1.3
 
   onenterframe: ->
     if core.input.left
-      @scaleX = 1
-      @x -= 12 if @x > 0
+      @scaleX = 1.3
+      @x -= 15 if @x > 0
     if core.input.right
-      @scaleX = -1
-      @x += 12 if @x < DISPLAY_WIDTH - @width
+      @scaleX = -1.3
+      @x += 15 if @x < DISPLAY_WIDTH - @width
 
 
 class KayoGameSceneBackAction extends Sprite
@@ -164,7 +165,7 @@ class KayoGameSceneRin extends Sprite
     @y = - @height
 
   onenterframe: ->
-    @y += 10
+    @y += 13
 
 #------------------かよゲームオーバーシーン--------------------
 class KayoGameOverScene extends Scene

@@ -169,7 +169,7 @@
 
     KayoGameScene.prototype.onenterframe = function() {
       var i, _results;
-      if (core.frame % 50 === 0 && this.staffCycle > 10) {
+      if (core.frame % 20 === 0 && this.staffCycle > 10) {
         this.staffCycle -= 1;
       }
       if (core.frame % this.staffCycle === 0) {
@@ -203,22 +203,24 @@
     __extends(KayoGameSceneChara, _super);
 
     function KayoGameSceneChara() {
-      KayoGameSceneChara.__super__.constructor.call(this, 73, 95);
+      KayoGameSceneChara.__super__.constructor.call(this, 62, 95);
       this.image = core.assets['./img/kayo_chara.png'];
-      this.moveTo(DISPLAY_WIDTH / 2 - this.width / 2, DISPLAY_HEIGHT - this.height);
+      this.moveTo(DISPLAY_WIDTH / 2 - this.width / 2, DISPLAY_HEIGHT - this.height * 1.3);
+      this.scaleX = 1.3;
+      this.scaleY = 1.3;
     }
 
     KayoGameSceneChara.prototype.onenterframe = function() {
       if (core.input.left) {
-        this.scaleX = 1;
+        this.scaleX = 1.3;
         if (this.x > 0) {
-          this.x -= 12;
+          this.x -= 15;
         }
       }
       if (core.input.right) {
-        this.scaleX = -1;
+        this.scaleX = -1.3;
         if (this.x < DISPLAY_WIDTH - this.width) {
-          return this.x += 12;
+          return this.x += 15;
         }
       }
     };
@@ -252,7 +254,7 @@
     }
 
     KayoGameSceneRin.prototype.onenterframe = function() {
-      return this.y += 10;
+      return this.y += 13;
     };
 
     return KayoGameSceneRin;
