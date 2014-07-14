@@ -16,6 +16,10 @@ class TitleScene extends Scene
     @addChild @titlename
     @addChild @titlelabel
 
+  ontouchend: ->
+   core.menuScene = new MenuScene()
+   core.pushScene(core.menuScene)
+
 
 class TitleName extends Sprite
   constructor: ->
@@ -34,11 +38,6 @@ class TitleName extends Sprite
       @y += 1
       if @y == 290
         @titleNameState = 'up'
-
-
-  ontouchstart: ->
-    core.menuScene = new MenuScene()
-    core.pushScene(core.menuScene)
 
 class TitleLabel extends Label
   constructor: ->
@@ -106,26 +105,48 @@ class KayoGameScene extends Scene
     @bg = new Sprite(DISPLAY_WIDTH, DISPLAY_HEIGHT)
     @bg.backgroundColor = 'wheat'
 
-    @chara = new KayoGameSceneChara()
     @bgaction = new KayoGameSceneBackAction()
+    @chara = new KayoGameSceneChara()
 
+    @staffs = []
+    @staffCycle = 40
     @addChild @bg
     @addChild @bgaction
     @addChild @chara
 
+  onenterframe: ->
+    if core.frame % 50 == 0 && @staffCycle > 10
+      @staffCycle -= 1
+    if core.frame % @staffCycle == 0
+      @rin = new KayoGameSceneRin()
+      @addChild @rin
+      @staffs.push @rin
+
+    i = @staffs.length
+    while i
+      @staff = @staffs[--i]
+      if @staff.intersect(@chara)
+        @removeChild @staff
+        core.popScene()
+        core.gameover = new KayoGameOverScene()
+        core.pushScene core.gameover
+      else if @staff.y > DISPLAY_HEIGHT
+        @removeChild @staff
+
 class KayoGameSceneChara extends Sprite
   constructor: ->
-    super(146, 191)
+    super(73, 95)
     @image = core.assets['./img/kayo_chara.png']
-    @moveTo(10,DISPLAY_HEIGHT - @height)
+    @moveTo(DISPLAY_WIDTH / 2 - @width / 2 , DISPLAY_HEIGHT - @height)
+
 
   onenterframe: ->
     if core.input.left
       @scaleX = 1
-      @x -= 8 if @x > 0
+      @x -= 12 if @x > 0
     if core.input.right
       @scaleX = -1
-      @x += 8 if @x < DISPLAY_WIDTH - @width
+      @x += 12 if @x < DISPLAY_WIDTH - @width
 
 
 class KayoGameSceneBackAction extends Sprite
@@ -134,6 +155,30 @@ class KayoGameSceneBackAction extends Sprite
     @image = core.assets['./img/gohan_bg.png']
     @x = DISPLAY_WIDTH/2 - @width/2
     @y = DISPLAY_HEIGHT/2 - @height/2
+
+class KayoGameSceneRin extends Sprite
+  constructor: ->
+    super(83,144)
+    @image = core.assets['./img/kayo_rin.png']
+    @x = Math.random() * (DISPLAY_WIDTH - @width)
+    @y = - @height
+
+  onenterframe: ->
+    @y += 10
+
+#------------------かよゲームオーバーシーン--------------------
+class KayoGameOverScene extends Scene
+  constructor: ->
+    super()
+    @bg = new Sprite(DISPLAY_WIDTH, DISPLAY_HEIGHT)
+    @bg.image = core.assets['./img/kayogameover.jpg']
+
+    @addChild @bg
+
+  ontouchend: ->
+    core.popScene()
+    @titleScene = new TitleScene()
+    core.pushScene @titleScene
 
 #-------------------------メイン---------------------------
 window.onload = ->
@@ -146,6 +191,9 @@ window.onload = ->
   assets.push('./img/bento1.jpg')
   assets.push('./img/kayo_chara.png')
   assets.push('./img/gohan_bg.png')
+  assets.push('./img/kayo_rin.png')
+  assets.push('./img/kayogameover.jpg')
+
   core.preload assets
 
   core.onload = ->
