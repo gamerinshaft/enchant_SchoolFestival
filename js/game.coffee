@@ -103,6 +103,7 @@ class KayoGameScene extends Scene
   constructor: ->
     core.keybind(16, "a")
     core.keybind(70, "b")
+    core.keybind(32, "c")
 
     super()
     @bg = new Sprite(DISPLAY_WIDTH, DISPLAY_HEIGHT)
@@ -115,26 +116,43 @@ class KayoGameScene extends Scene
     @bomblabel = new KayoGameSceneBomb(@numberOfBomb)
     @isOnceDoAmongPressKey = 0
     @staffs = []
+    @kasuris = []
     @staffCycle = 40
+    @pt = 0
+    @gameTime = 0
+
+    @time = new KayoGameSceneTime()
+    @scoreLabel = new KayoGameSceneScore(@pt)
+
     @addChild @bg
     @addChild @bomblabel
     @addChild @bgaction
+    @addChild @time
+    @addChild @scoreLabel
     @addChild @chara
 
+
   onenterframe: ->
+    @gameTime += 1/core.fps
     if core.frame % 20 == 0 && @staffCycle > 10
       @staffCycle -= 1
     if core.frame % @staffCycle == 0
       @rin = new KayoGameSceneRin()
       @addChild @rin
+      @addChild @rin.kasuri
       @staffs.push @rin
+      @kasuris.push @rin.kasuri
     i = @staffs.length
+    j = @kasuris .length
     if core.input.b && @numberOfBomb > 0
       if @isOnceDoAmongPressKey == 0
         @isOnceDoAmongPressKey = 1
         while i
           @staffs.splice i, 1
           @removeChild @staffs[--i]
+        while j
+          @kasuris.splice j, 1
+          @removeChild @kasuris[--j]
         @removeChild @bomblabel
         @bomblabel = new KayoGameSceneBomb(--@numberOfBomb)
         @addChild @bomblabel
@@ -143,33 +161,42 @@ class KayoGameScene extends Scene
 
     while i
       @staff = @staffs[--i]
+      @kasuri = @kasuris[--j]
+      if @kasuri.intersect(@chara)
+        @removeChild @scoreLabel
+        @scoreLabel = new KayoGameSceneScore(++@pt)
+        @addChild @scoreLabel
+      else if @kasuri.y > DISPLAY_HEIGHT
+        @removeChild @kasuri
+
       if @staff.intersect(@chara)
         @staffs.splice i, 1
         @removeChild @staff
         core.popScene()
-        core.gameover = new KayoGameOverScene()
+        core.gameover = new KayoGameOverScene(@gameTime.toFixed(2), @pt)
         core.pushScene core.gameover
+
       else if @staff.y > DISPLAY_HEIGHT
         @removeChild @staff
 
 class KayoGameSceneChara extends Sprite
   constructor: ->
-    super(62, 95)
+    super(58, 95)
     @image = core.assets['./img/kayo_chara.png']
-    @moveTo(DISPLAY_WIDTH / 2 - @width / 2 , DISPLAY_HEIGHT - @height * 1.1)
-    @scaleX = 1.1
-    @scaleY = 1.1
+    @moveTo(DISPLAY_WIDTH / 2 - @width / 2 , DISPLAY_HEIGHT - @height * 1)
+    @scaleX = 1
+    @scaleY = 1
 
   onenterframe: ->
     if core.input.left
-      @scaleX = 1.1
+      @scaleX = 1
       if core.input.a
         @x -= 5 if @x > 0
       else
         @x -= 15 if @x > 0
 
     if core.input.right
-      @scaleX = -1.1
+      @scaleX = -1
       if core.input.a
         @x += 5 if @x < DISPLAY_WIDTH - @width
       else
@@ -183,6 +210,19 @@ class KayoGameSceneBomb extends Label
     @moveTo(10,10)
     @font = '28px serif'
 
+class KayoGameSceneTime extends Label
+  constructor: ->
+    super()
+    @time = 0
+    @text = @time + ' 秒'
+    @x = DISPLAY_WIDTH - 200
+    @y = 10
+    @color = 'darkred'
+    @font = '28px italic'
+
+  onenterframe: ->
+    @time += 1 / core.fps
+    @text = @time.toFixed(2).toString() + ' 秒'
 
 class KayoGameSceneBackAction extends Sprite
   constructor: ->
@@ -194,21 +234,67 @@ class KayoGameSceneBackAction extends Sprite
 class KayoGameSceneRin extends Sprite
   constructor: ->
     super(83,144)
+    @kasuri = new Kasuri()
+
     @image = core.assets['./img/kayo_rin.png']
-    @x = Math.random() * (DISPLAY_WIDTH - @width)
-    @y = - @height
+    @x = Math.random() * (DISPLAY_WIDTH - @width * 1.1)
+    @kasuri.x = @x - 10
+    @scaleX = 1.1
+    @scaleY = 1.1
+    @y = - @height * 1.1
+
+    @kasuri.scaleX = 1.1
+    @kasuri.scaleY = 1.1
+    @kasuri.y = - @kasuri.height * 1.1
 
   onenterframe: ->
     @y += 13
+    @kasuri.y += 13
+
+class Kasuri extends Sprite
+  constructor: ->
+    super(103, 144)
+
+class KayoGameSceneScore extends Label
+  constructor: (score) ->
+    super()
+    @text = score + ' Pt'
+    @x = DISPLAY_WIDTH - 200
+    @y = 50
+    @color = 'darkred'
+    @font = '28px meiryo'
+
 
 #------------------かよゲームオーバーシーン--------------------
 class KayoGameOverScene extends Scene
-  constructor: ->
+  constructor: (time, point)->
     super()
     @bg = new Sprite(DISPLAY_WIDTH, DISPLAY_HEIGHT)
     @bg.image = core.assets['./img/kayogameover.jpg']
 
+    @datatime = new Label()
+    @datatime.backgroundColor = 'white'
+    @datatime.height = 50
+    @datatime.textAlign = 'center'
+    @datatime.text = '時間：' + time
+    @datatime.color = 'midnightblue'
+    @datatime.font = '48px serif'
+    @datatime.x = DISPLAY_WIDTH - 420
+    @datatime.y = DISPLAY_HEIGHT - 200
+
+    @datascore = new Label()
+    @datascore.backgroundColor = 'white'
+    @datascore.height = 50
+    @datascore.textAlign = 'center'
+    @datascore.text = 'スコア：' + point
+    @datascore.color = 'midnightblue'
+    @datascore.font = '48px serif'
+    @datascore.x = DISPLAY_WIDTH - 420
+    @datascore.y = DISPLAY_HEIGHT - 100
+
     @addChild @bg
+    @addChild @datatime
+    @addChild @datascore
 
   ontouchend: ->
     core.popScene()
@@ -228,11 +314,12 @@ window.onload = ->
   assets.push('./img/gohan_bg.png')
   assets.push('./img/kayo_rin.png')
   assets.push('./img/kayogameover.jpg')
-
   core.preload assets
+
 
   core.onload = ->
     @titleScene = new TitleScene()
     @kayoGameScene = new KayoGameScene()
     @pushScene @titleScene
-  core.start()
+  core.debug()
+
