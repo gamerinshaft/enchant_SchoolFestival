@@ -117,6 +117,7 @@ class KayoGameScene extends Scene
     core.keybind(16, "a")
     core.keybind(70, "b")
     core.keybind(32, "c")
+    core.keybind(27, "d")
 
     super()
     @bg = new Sprite(DISPLAY_WIDTH, DISPLAY_HEIGHT)
@@ -250,15 +251,15 @@ class KayoGameSceneRin extends Sprite
     @kasuri = new Kasuri()
 
     @image = core.assets['./img/kayo_rin.png']
-    @x = Math.random() * (DISPLAY_WIDTH - @width * 1.1)
-    @kasuri.x = @x - 10
-    @scaleX = 1.1
-    @scaleY = 1.1
-    @y = - @height * 1.1
+    @x = Math.random() * (DISPLAY_WIDTH - @width * 1)
+    @kasuri.x = @x - 15
+    @scaleX = 1
+    @scaleY = 1
+    @y = - @height * 1
 
-    @kasuri.scaleX = 1.1
-    @kasuri.scaleY = 1.1
-    @kasuri.y = - @kasuri.height * 1.1
+    @kasuri.scaleX = 1
+    @kasuri.scaleY = 1
+    @kasuri.y = - @kasuri.height * 1
 
   onenterframe: ->
     @y += 13
@@ -266,7 +267,7 @@ class KayoGameSceneRin extends Sprite
 
 class Kasuri extends Sprite
   constructor: ->
-    super(103, 144)
+    super(113, 144)
 
 class KayoGameSceneScore extends Label
   constructor: (score) ->
@@ -311,8 +312,20 @@ class KayoGameOverScene extends Scene
 
   ontouchend: ->
     core.popScene()
-    @titleScene = new TitleScene()
-    core.pushScene @titleScene
+    @kayogameScene = new KayoGameScene()
+    core.pushScene @kayogameScene
+
+  onenterframe: ->
+    if core.input.c
+      core.popScene()
+      @kayogameScene = new KayoGameScene()
+      core.pushScene @kayogameScene
+
+    if core.input.d
+      core.popScene()
+      @titleScene = new TitleScene()
+      core.pushScene @titleScene
+
 
 #-------------------------メイン---------------------------
 window.onload = ->

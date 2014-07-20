@@ -178,6 +178,7 @@
       core.keybind(16, "a");
       core.keybind(70, "b");
       core.keybind(32, "c");
+      core.keybind(27, "d");
       KayoGameScene.__super__.constructor.call(this);
       this.bg = new Sprite(DISPLAY_WIDTH, DISPLAY_HEIGHT);
       this.bg.backgroundColor = 'wheat';
@@ -364,14 +365,14 @@
       KayoGameSceneRin.__super__.constructor.call(this, 83, 144);
       this.kasuri = new Kasuri();
       this.image = core.assets['./img/kayo_rin.png'];
-      this.x = Math.random() * (DISPLAY_WIDTH - this.width * 1.1);
-      this.kasuri.x = this.x - 10;
-      this.scaleX = 1.1;
-      this.scaleY = 1.1;
-      this.y = -this.height * 1.1;
-      this.kasuri.scaleX = 1.1;
-      this.kasuri.scaleY = 1.1;
-      this.kasuri.y = -this.kasuri.height * 1.1;
+      this.x = Math.random() * (DISPLAY_WIDTH - this.width * 1);
+      this.kasuri.x = this.x - 15;
+      this.scaleX = 1;
+      this.scaleY = 1;
+      this.y = -this.height * 1;
+      this.kasuri.scaleX = 1;
+      this.kasuri.scaleY = 1;
+      this.kasuri.y = -this.kasuri.height * 1;
     }
 
     KayoGameSceneRin.prototype.onenterframe = function() {
@@ -387,7 +388,7 @@
     __extends(Kasuri, _super);
 
     function Kasuri() {
-      Kasuri.__super__.constructor.call(this, 103, 144);
+      Kasuri.__super__.constructor.call(this, 113, 144);
     }
 
     return Kasuri;
@@ -442,8 +443,21 @@
 
     KayoGameOverScene.prototype.ontouchend = function() {
       core.popScene();
-      this.titleScene = new TitleScene();
-      return core.pushScene(this.titleScene);
+      this.kayogameScene = new KayoGameScene();
+      return core.pushScene(this.kayogameScene);
+    };
+
+    KayoGameOverScene.prototype.onenterframe = function() {
+      if (core.input.c) {
+        core.popScene();
+        this.kayogameScene = new KayoGameScene();
+        core.pushScene(this.kayogameScene);
+      }
+      if (core.input.d) {
+        core.popScene();
+        this.titleScene = new TitleScene();
+        return core.pushScene(this.titleScene);
+      }
     };
 
     return KayoGameOverScene;
